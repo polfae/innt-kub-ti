@@ -867,3 +867,139 @@ input[type="number"]:focus { outline: 3px solid var(--focus); border-color: var(
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* v17 Treytir settings modal: hide agreement terms until the cog is opened */
+.layout--single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.panel__header--row {
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.settings-button {
+  flex: 0 0 auto;
+  width: 2.35rem;
+  height: 2.35rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--stoyt);
+  cursor: pointer;
+  font-size: 1.18rem;
+  font-weight: 900;
+  line-height: 1;
+}
+.settings-button:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 8px 20px rgba(23,33,31,0.06);
+}
+.settings-button:focus-visible,
+.modal-close:focus-visible,
+.button--primary:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.terms-modal[hidden] {
+  display: none !important;
+}
+.terms-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+.terms-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(13, 24, 22, 0.46);
+  backdrop-filter: blur(5px);
+}
+.terms-modal__panel {
+  position: relative;
+  z-index: 1;
+  width: min(620px, 100%);
+  max-height: min(88vh, 760px);
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: rgba(255,255,255,0.98);
+  box-shadow: var(--shadow-md);
+  padding: clamp(0.9rem, 2vw, 1.2rem);
+}
+.terms-modal__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 0.85rem;
+}
+.modal-close {
+  flex: 0 0 auto;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 1.4rem;
+  line-height: 1;
+}
+.terms-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+.button--primary {
+  background: var(--stoyt);
+  color: #fff;
+}
+.button--primary:hover {
+  background: var(--stoyt-dark);
+}
+body.modal-open {
+  overflow: hidden;
+}
+
+@media (max-width: 700px) {
+  .settings-button {
+    width: 2.15rem;
+    height: 2.15rem;
+  }
+  .terms-modal {
+    align-items: end;
+    padding: 0.55rem;
+  }
+  .terms-modal__panel {
+    width: 100%;
+    max-height: 86vh;
+    border-radius: 20px;
+    padding: 0.82rem;
+  }
+  .terms-modal__header {
+    margin-bottom: 0.65rem;
+  }
+  .terms-modal__panel .field {
+    grid-template-columns: 1fr;
+    padding: 0.58rem;
+  }
+  .terms-modal__panel .field small {
+    display: none;
+  }
+  .terms-modal__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}

@@ -427,6 +427,37 @@ function makeShareUrl() {
   return `${window.location.origin}${window.location.pathname}?data=${data}`;
 }
 
+
+function openTermsModal() {
+  renderTerms();
+  const modal = document.querySelector("#termsModal");
+  if (!modal) return;
+  modal.hidden = false;
+  document.body.classList.add("modal-open");
+  document.querySelector("#termsModal input")?.focus();
+}
+
+function closeTermsModal() {
+  const modal = document.querySelector("#termsModal");
+  if (!modal) return;
+  modal.hidden = true;
+  document.body.classList.remove("modal-open");
+  document.querySelector("#openTermsButton")?.focus();
+}
+
+function saveTermsFromModal() {
+  termConfig.forEach((config) => {
+    const input = document.querySelector(`#${config.key}`);
+    if (!input) return;
+    const isPercent = input.dataset.percent === "true";
+    terms[config.key] = isPercent
+      ? safeNumber(input.value) / 100
+      : safeNumber(input.value);
+  });
+  renderResults();
+  closeTermsModal();
+}
+
 function attachEvents() {
   document.addEventListener("input", (event) => {
     const membershipIndex = event.target.dataset.membershipIndex;
@@ -441,11 +472,7 @@ function attachEvents() {
     }
 
     if (termKey) {
-      const isPercent = event.target.dataset.percent === "true";
-      terms[termKey] = isPercent
-        ? safeNumber(event.target.value) / 100
-        : safeNumber(event.target.value);
-      renderResults();
+      return;
     }
 
     if (
@@ -494,6 +521,18 @@ function attachEvents() {
       }
     });
   }
+
+  document.querySelector("#openTermsButton")?.addEventListener("click", openTermsModal);
+  document.querySelector("#closeTermsButton")?.addEventListener("click", closeTermsModal);
+  document.querySelector("#cancelTermsButton")?.addEventListener("click", closeTermsModal);
+  document.querySelector("#saveTermsButton")?.addEventListener("click", saveTermsFromModal);
+  document.querySelector("[data-close-terms]")?.addEventListener("click", closeTermsModal);
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !document.querySelector("#termsModal")?.hidden) {
+      closeTermsModal();
+    }
+  });
 }
 
 loadState();
