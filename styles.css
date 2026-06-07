@@ -1021,3 +1021,159 @@ body.modal-open {
   grid-template-columns: minmax(0, 1fr);
   justify-content: stretch;
 }
+
+/* v20: Limahald rows styled like result cards instead of a traditional table */
+.panel--table .table-wrap {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+}
+
+.membership-table {
+  display: grid;
+  gap: 0.58rem;
+  min-width: 0;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: transparent;
+}
+
+.membership-table thead,
+.membership-table tbody,
+.membership-table tfoot {
+  display: grid;
+  gap: 0.52rem;
+}
+
+.membership-table tr {
+  display: grid;
+  grid-template-columns: 1.12fr 0.94fr 0.94fr;
+  gap: 0.62rem;
+  align-items: center;
+}
+
+.membership-table th,
+.membership-table td {
+  width: auto !important;
+  padding: 0;
+  border: 0;
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.membership-table thead tr {
+  padding: 0 0.45rem;
+}
+
+.membership-table thead th {
+  position: static;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.68rem;
+  line-height: 1.15;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 900;
+  z-index: auto;
+}
+
+.membership-table thead th:first-child,
+.membership-table thead th:last-child {
+  border-radius: 0;
+}
+
+.membership-table tbody tr,
+.membership-table tfoot tr {
+  padding: 0.62rem 0.68rem;
+  border: 1px solid rgba(229,222,211,0.78);
+  border-radius: 15px;
+  background: var(--surface-soft);
+}
+
+.membership-table tbody tr:hover {
+  background: var(--surface-soft);
+}
+
+.membership-table tfoot tr {
+  background: #f4efe7;
+  font-weight: 900;
+}
+
+.membership-table tfoot th {
+  background: transparent;
+  font-size: 0.95rem;
+  font-weight: 900;
+}
+
+.membership-table tfoot th[scope="row"] {
+  grid-column: 1 / 3;
+}
+
+.membership-table td:nth-child(2),
+.membership-table td:nth-child(3),
+.membership-table th:nth-child(2),
+.membership-table th:nth-child(3),
+.membership-table tfoot th:nth-child(3) {
+  text-align: right;
+}
+
+.membership-table input[type="number"] {
+  min-width: 0;
+  width: 100%;
+  padding: 0.5rem 0.55rem;
+  border-radius: 12px;
+  text-align: right;
+  background: #fff;
+}
+
+.membership-table th:nth-child(4),
+.membership-table td:nth-child(4),
+.membership-table #totalIncomeCell,
+.membership-table .calculation-only {
+  display: none !important;
+}
+
+@media (max-width: 700px) {
+  .membership-table {
+    gap: 0.45rem;
+  }
+
+  .membership-table thead,
+  .membership-table tbody,
+  .membership-table tfoot {
+    gap: 0.45rem;
+  }
+
+  .membership-table tr {
+    grid-template-columns: 1.04fr 0.98fr 0.98fr;
+    gap: 0.42rem;
+  }
+
+  .membership-table thead tr {
+    padding: 0 0.38rem;
+  }
+
+  .membership-table thead th {
+    font-size: 0.58rem;
+    letter-spacing: 0.045em;
+  }
+
+  .membership-table tbody tr,
+  .membership-table tfoot tr {
+    padding: 0.5rem;
+    border-radius: 13px;
+  }
+
+  .membership-table th,
+  .membership-table td {
+    font-size: 0.86rem;
+  }
+
+  .membership-table input[type="number"] {
+    padding: 0.45rem 0.42rem;
+    font-size: 0.9rem;
+  }
+}

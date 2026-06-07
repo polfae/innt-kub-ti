@@ -44,9 +44,6 @@
           <div class="panel__header panel__header--row">
             <div>
               <h3 class="eyebrow">Limahald</h3>
-              <p class="panel__description">
-                Tøppa inn kostnaðin og talið av limum fyri hvørt limahald
-              </p>
             </div>
             <button
               class="settings-button"
@@ -83,22 +80,51 @@
         </article>
       </section>
 
-      <section class="terms-modal" id="termsModal" role="dialog" aria-modal="true" aria-labelledby="termsModalTitle" hidden>
+      <section
+        class="terms-modal"
+        id="termsModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="termsModalTitle"
+        hidden
+      >
         <div class="terms-modal__backdrop" data-close-terms></div>
         <div class="terms-modal__panel">
           <div class="terms-modal__header">
             <div>
               <h3 class="eyebrow" id="termsModalTitle">Treytir</h3>
-              <p class="panel__description">Treytir ásettar eftir avtalu. Broytingar verða ikki brúktar fyrr enn tú trýstir á Goym.</p>
+              <p class="panel__description">
+                Treytir ásettar eftir avtalu. Broytingar verða ikki brúktar fyrr
+                enn tú trýstir á Goym.
+              </p>
             </div>
-            <button class="modal-close" type="button" id="closeTermsButton" aria-label="Lat aftur">×</button>
+            <button
+              class="modal-close"
+              type="button"
+              id="closeTermsButton"
+              aria-label="Lat aftur"
+            >
+              ×
+            </button>
           </div>
 
           <div class="form-grid" id="termsInputs"></div>
 
           <div class="terms-modal__actions">
-            <button class="button button--secondary" type="button" id="cancelTermsButton">Avlýs</button>
-            <button class="button button--primary" type="button" id="saveTermsButton">Goym</button>
+            <button
+              class="button button--secondary"
+              type="button"
+              id="cancelTermsButton"
+            >
+              Avlýs
+            </button>
+            <button
+              class="button button--primary"
+              type="button"
+              id="saveTermsButton"
+            >
+              Goym
+            </button>
           </div>
         </div>
       </section>
