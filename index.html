@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fo">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Roknari til býti av limainntøku millum Styrkifelagið Stoyt og Tvørmegi."
+    />
+    <title>Stoyt / Tvørmegi – Býti av limainntøku</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <section class="hero" id="top">
+        <div class="hero__content">
+          <p class="eyebrow eyebrow--light">Styrkifelagið Stoyt</p>
+          <h1>Býti av limainntøku</h1>
+          <p class="hero__lead">
+            Ein roknari sum vísir, hvussu limainntøkan verður býtt millum Stoyt
+            og Tvørmegi, eftir teimum treytum sum er avtalað.
+          </p>
+        </div>
+
+        <aside class="hero-card" aria-label="Samandráttur">
+          <span class="hero-card__label">Samlað limainntøka</span>
+          <strong id="heroTotalIncome">0,00 kr</strong>
+          <small id="heroTotalMembers">0 limir</small>
+        </aside>
+      </section>
+    </header>
+
+    <main class="page">
+      <section
+        class="notice"
+        id="linkNotice"
+        role="status"
+        aria-live="polite"
+        hidden
+      ></section>
+
+      <section class="layout layout--input">
+        <article class="panel panel--table">
+          <div class="panel__header">
+            <div>
+              <h3 class="eyebrow">Limahald</h3>
+              <p class="panel__description">
+                Tøppa inn kostnaðin og talið av limum fyri hvørt limahald
+              </p>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="data-table membership-table">
+              <thead>
+                <tr>
+                  <th scope="col">Limahald</th>
+                  <th scope="col">Kostnaður / mðr.</th>
+                  <th scope="col">Tal av limum</th>
+                  <th scope="col">Samlað / mðr.</th>
+                </tr>
+              </thead>
+              <tbody id="membershipRows"></tbody>
+              <tfoot>
+                <tr>
+                  <th scope="row" colspan="2">Samlað</th>
+                  <th id="totalMembersCell">0</th>
+                  <th id="totalIncomeCell" class="calculation-only">0,00 kr</th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </article>
+
+        <article class="panel panel--terms">
+          <div class="panel__header">
+            <div>
+              <h3 class="eyebrow">Treytir</h3>
+              <p class="panel__description">Treytir ásettar eftir avtalu</p>
+            </div>
+          </div>
+
+          <div class="form-grid" id="termsInputs"></div>
+        </article>
+      </section>
+
+      <section class="summary-grid" aria-label="Høvuðsúrslit">
+        <article class="kpi kpi--stoyt">
+          <span>Stoyt / mðr.</span>
+          <strong id="stoytMonthly">0,00 kr</strong>
+          <small></small>
+        </article>
+        <article class="kpi kpi--tvoormegi">
+          <span>Tvørmegi / mðr.</span>
+          <strong id="tvoormegiMonthly">0,00 kr</strong>
+          <small></small>
+        </article>
+        <article class="kpi">
+          <span>Stoyt / ár</span>
+          <strong id="stoytYearly">0,00 kr</strong>
+          <small></small>
+        </article>
+        <article class="kpi">
+          <span>Tvørmegi / ár</span>
+          <strong id="tvoormegiYearly">0,00 kr</strong>
+          <small></small>
+        </article>
+      </section>
+
+      <section class="layout">
+        <article class="panel">
+          <div class="panel__header">
+            <div>
+              <h3 class="eyebrow">Býti av eyka inntøku</h3>
+            </div>
+          </div>
+
+          <div class="split-card">
+            <div class="split-card__labels">
+              <span>Stoyt</span>
+              <span>Tvørmegi</span>
+            </div>
+            <div class="split-bar" aria-label="Prosentbýti av eyka inntøku">
+              <div
+                class="split-bar__part split-bar__part--stoyt"
+                id="stoytBar"
+              ></div>
+              <div
+                class="split-bar__part split-bar__part--tvoormegi"
+                id="tvoormegiBar"
+              ></div>
+            </div>
+          </div>
+
+          <dl class="result-list" id="monthlyResults"></dl>
+        </article>
+
+        <article class="panel">
+          <div class="panel__header">
+            <div>
+              <h3 class="eyebrow">Útgreining</h3>
+            </div>
+          </div>
+          <dl class="result-list" id="calculationResults"></dl>
+        </article>
+      </section>
+
+      <section class="panel panel--wide kombi-panel" id="kombiIncomePanel">
+        <div class="panel__header panel__header--wrap">
+          <div>
+            <h3 class="eyebrow">Eyka yvirlit</h3>
+            <p class="panel__description">
+              Inntøka hjá Tvørmegi, tá býtið av Stoyt/Tvørmegi-limahaldinum er
+              íroknað
+            </p>
+          </div>
+        </div>
+
+        <div id="kombiDetails">
+          <div
+            class="summary-grid summary-grid--compact"
+            aria-label="Tvørmegi Kombi samandráttur"
+          >
+            <article class="kpi kpi--tvoormegi">
+              <span>Mánaðarligt</span>
+              <strong id="tvoormegiIncludingKombiMonthly">0,00 kr</strong>
+              <small>Býti + Kombi-partur</small>
+            </article>
+            <article class="kpi">
+              <span>Árligt</span>
+              <strong id="tvoormegiIncludingKombiYearly">0,00 kr</strong>
+              <small></small>
+            </article>
+          </div>
+          <dl class="result-list result-list--compact" id="kombiResults"></dl>
+        </div>
+      </section>
+
+      <section
+        class="utility-hidden"
+        aria-hidden="true"
+        data-purpose="Keeps required JavaScript elements available without showing the removed comparison table."
+      >
+        <input
+          id="projectionMax"
+          type="number"
+          min="1"
+          max="200"
+          step="1"
+          value="40"
+          tabindex="-1"
+        />
+        <table>
+          <tbody id="projectionRows"></tbody>
+        </table>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Styrkifelagið Stoyt · Roknari til býti av limainntøku</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
