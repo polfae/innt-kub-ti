@@ -833,3 +833,37 @@ input[type="number"]:focus { outline: 3px solid var(--focus); border-color: var(
     margin-top: 1.1rem;
   }
 }
+
+/* v14 fix: remove unused vertical space in Limahald and Treytir panels */
+.layout,
+.layout--input {
+  align-items: start;
+}
+
+.panel--table,
+.panel--terms {
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+@media (max-width: 1040px) {
+  .panel--table,
+  .panel--terms {
+    min-height: 0 !important;
+    height: auto !important;
+  }
+}
+
+/* v15 mobile result cards: keep the four main KPI containers in two columns on iPhone width */
+@media (max-width: 700px) {
+  .summary-grid:not(.summary-grid--compact) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* v16 mobile Kombi result cards: keep the two Eyka yvirlit KPI containers side by side on iPhone width */
+@media (max-width: 700px) {
+  .summary-grid--compact {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
