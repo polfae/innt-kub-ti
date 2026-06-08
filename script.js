@@ -1,3 +1,43 @@
+const SITE_PASSWORD = "Stoyt_sf21";
+const PASSWORD_SESSION_KEY = "stoyt-tvormegi-authenticated";
+
+function unlockSite() {
+  document.body.classList.remove("auth-locked");
+  document.querySelector("#passwordScreen")?.setAttribute("hidden", "");
+}
+
+function setupPasswordGate() {
+  const passwordScreen = document.querySelector("#passwordScreen");
+  const passwordForm = document.querySelector("#passwordForm");
+  const passwordInput = document.querySelector("#sitePassword");
+  const passwordError = document.querySelector("#passwordError");
+
+  if (!passwordScreen || !passwordForm || !passwordInput) return;
+
+  if (sessionStorage.getItem(PASSWORD_SESSION_KEY) === "true") {
+    unlockSite();
+    return;
+  }
+
+  passwordInput.focus();
+
+  passwordForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    if (passwordInput.value === SITE_PASSWORD) {
+      sessionStorage.setItem(PASSWORD_SESSION_KEY, "true");
+      unlockSite();
+      return;
+    }
+
+    if (passwordError) passwordError.hidden = false;
+    passwordInput.value = "";
+    passwordInput.focus();
+  });
+}
+
+setupPasswordGate();
+
 const defaultMemberships = [
   { id: "adult", name: "Vaksin", cost: 350, members: 10 },
   { id: "youth", name: "Ung", cost: 260, members: 10 },
@@ -333,16 +373,14 @@ function renderResults() {
     0,
     100
   )}%`;
+  document.querySelector("#stoytBarPercent").textContent = formatPercent(
+    result.stoytPercent
+  );
+  document.querySelector("#tvoormegiBarPercent").textContent = formatPercent(
+    result.tvoormegiPercent
+  );
 
   setResultList("monthlyResults", [
-    [
-      "Prosent býti hjá Stoyt av eyka inntøku",
-      formatPercent(result.stoytPercent),
-    ],
-    [
-      "Prosent býti hjá Tvørmegi av eyka inntøku",
-      formatPercent(result.tvoormegiPercent),
-    ],
     ["Býti til Stoyt frá eyka inntøku", formatKr(result.stoytFromExtra)],
     ["Býti til Tvørmegi frá eyka inntøku", formatKr(result.tvoormegiFromExtra)],
   ]);

@@ -392,7 +392,8 @@ input[type="number"]:focus { outline: 3px solid var(--focus); border-color: var(
   background: #eee7dc;
   box-shadow: inset 0 1px 3px rgba(23,33,31,0.08);
 }
-.split-bar__part { transition: width 0.2s ease; min-width: 0; }
+.split-bar__part { display: grid; place-items: center; transition: width 0.2s ease; min-width: 0; }
+.split-bar__percent { color: #fff; font-weight: 900; font-size: 0.88rem; line-height: 1; white-space: nowrap; text-shadow: 0 1px 2px rgba(0,0,0,0.22); }
 .split-bar__part--stoyt { background: linear-gradient(90deg, var(--stoyt-dark), var(--stoyt)); }
 .split-bar__part--tvoormegi { background: linear-gradient(90deg, var(--tvoormegi), #d89127); }
 .hint { margin: 0.6rem 0 0; color: var(--muted); font-size: 0.92rem; }
@@ -1175,5 +1176,101 @@ body.modal-open {
   .membership-table input[type="number"] {
     padding: 0.45rem 0.42rem;
     font-size: 0.9rem;
+  }
+}
+
+
+/* Password gate */
+body.auth-locked {
+  overflow: hidden;
+}
+
+body.auth-locked > :not(.password-screen) {
+  display: none !important;
+}
+
+.password-screen {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255, 217, 149, 0.42), transparent 28rem),
+    radial-gradient(circle at 90% 14%, rgba(18, 107, 97, 0.18), transparent 26rem),
+    linear-gradient(135deg, rgba(9, 42, 38, 0.98), rgba(16, 92, 84, 0.94) 58%, rgba(126, 75, 8, 0.88));
+  color: #fff;
+}
+
+.password-card {
+  width: min(100%, 430px);
+  border: 1px solid rgba(255,255,255,0.24);
+  border-radius: 26px;
+  padding: clamp(1.25rem, 5vw, 2rem);
+  background: linear-gradient(180deg, rgba(255,255,255,0.17), rgba(255,255,255,0.1));
+  box-shadow: 0 24px 80px rgba(0,0,0,0.22);
+  backdrop-filter: blur(18px);
+}
+
+.password-card h1 {
+  margin: 0.15rem 0 0.5rem;
+  font-size: clamp(2rem, 9vw, 3.25rem);
+  line-height: 0.95;
+  letter-spacing: -0.065em;
+}
+
+.password-card__text {
+  margin: 0 0 1rem;
+  color: rgba(255,255,255,0.78);
+}
+
+.password-form {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.password-form label {
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.78);
+}
+
+.password-form input[type="password"] {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,0.24);
+  border-radius: 14px;
+  padding: 0.85rem 0.9rem;
+  background: rgba(255,255,255,0.94);
+  color: var(--text);
+  font: inherit;
+}
+
+.password-form input[type="password"]:focus {
+  outline: 3px solid rgba(255,255,255,0.22);
+  border-color: rgba(255,255,255,0.65);
+}
+
+.password-form .button {
+  width: 100%;
+  justify-content: center;
+}
+
+.password-error {
+  margin: 0.15rem 0 0;
+  color: #ffe4e4;
+  font-weight: 800;
+}
+
+/* v22 password fix: ensure hidden password screen actually disappears after correct password */
+.password-screen[hidden] {
+  display: none !important;
+}
+
+
+/* v23: show split percentages inside the bar */
+@media (max-width: 420px) {
+  .split-bar__percent {
+    font-size: 0.78rem;
   }
 }
