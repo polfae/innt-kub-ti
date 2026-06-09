@@ -42,7 +42,7 @@ const defaultMemberships = [
   { id: "adult", name: "Vaksin", cost: 350, members: 10 },
   { id: "youth", name: "Ung", cost: 260, members: 10 },
   { id: "shared", name: "Stoyt / Tvørmegi", cost: 270, members: 0 },
-  { id: "partial", name: "Partvís hald", cost: 180, members: 0 },
+  { id: "partial", name: "Partvís hald", cost: 0, members: 0 },
 ];
 
 const defaultTerms = {
@@ -54,12 +54,13 @@ const defaultTerms = {
   showTvoormegiKombiIncome: true,
 };
 
-const STORAGE_KEY = "stoyt-tvormegi-calculator-v3";
+const STORAGE_KEY = "stoyt-tvormegi-calculator-v4";
 let memberships = structuredClone(defaultMemberships);
 let terms = { ...defaultTerms };
 
 const membershipRows = document.querySelector("#membershipRows");
 const termsInputs = document.querySelector("#termsInputs");
+const membershipSettings = document.querySelector("#membershipSettings");
 const projectionRows = document.querySelector("#projectionRows");
 const projectionMax = document.querySelector("#projectionMax");
 const linkNotice = document.querySelector("#linkNotice");
@@ -102,14 +103,6 @@ const termConfig = [
     max: 100,
     percent: true,
     suffix: "%",
-  },
-  {
-    key: "sharedFullPrice",
-    label: "Samlaður kostnaður fyri Stoyt / Tvørmegi hald",
-    help: "Samlaða býti hjá Stoyt og Tvørmegi fyri Stoyt / Tvørmegi haldið",
-    step: 1,
-    min: 0,
-    suffix: "kr",
   },
 ];
 
@@ -276,15 +269,83 @@ function renderMembershipRows() {
       (item, index) => `
     <tr>
       <td><strong>${item.name}</strong></td>
-      <td><input type="number" min="0" step="1" value="${item.cost}" data-membership-index="${index}" data-field="cost" aria-label="${item.name} kostnaður"></td>
       <td><input type="number" min="0" step="1" value="${item.members}" data-membership-index="${index}" data-field="members" aria-label="${item.name} limir"></td>
-      <td id="membershipTotal-${item.id}">0,00 kr</td>
+      <td id="membershipTotal-${item.id}" class="calculation-only">0 kr</td>
     </tr>
   `
     )
     .join("");
 }
 
+function getMembershipById(id) {
+  return memberships.find((item) => item.id === id);
+}
+
+function renderMembershipSettings() {
+  if (!membershipSettings) return;
+
+  const adult = getMembershipById("adult");
+  const youth = getMembershipById("youth");
+  const shared = getMembershipById("shared");
+  const partial = getMembershipById("partial");
+  const sharedStoyt = safeNumber(shared?.cost);
+  const sharedFull = safeNumber(terms.sharedFullPrice);
+  const sharedTvoormegi = Math.max(0, sharedFull - sharedStoyt);
+
+  membershipSettings.innerHTML = `
+    <div class="field">
+      <label for="membershipAdultCost">Vaksin<small>Kostnaður pr. lim</small></label>
+      <div class="input-with-suffix">
+        <input id="membershipAdultCost" type="number" min="0" step="1" value="${safeNumber(adult?.cost)}" data-membership-setting="adultCost" aria-label="Vaksin kostnaður">
+        <span>kr</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="membershipYouthCost">Ung<small>Kostnaður pr. lim</small></label>
+      <div class="input-with-suffix">
+        <input id="membershipYouthCost" type="number" min="0" step="1" value="${safeNumber(youth?.cost)}" data-membership-setting="youthCost" aria-label="Ung kostnaður">
+        <span>kr</span>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group__header">
+        <strong>Stoyt / Tvørmegi</strong>
+        <small>Samlaður kostnaður og býtið millum partarnar</small>
+      </div>
+      <div class="field">
+        <label for="membershipSharedFullCost">Samlaður kostnaður<small>Vanligt samlað limagjald</small></label>
+        <div class="input-with-suffix">
+          <input id="membershipSharedFullCost" type="number" min="0" step="1" value="${sharedFull}" data-membership-setting="sharedFullCost" aria-label="Samlaður kostnaður fyri Stoyt / Tvørmegi">
+          <span>kr</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="membershipSharedStoytCost">Stoyt-partur<small>Hesin parturin verður brúktur í býti-útrokningini</small></label>
+        <div class="input-with-suffix">
+          <input id="membershipSharedStoytCost" type="number" min="0" step="1" value="${sharedStoyt}" data-membership-setting="sharedStoytCost" aria-label="Stoyt partur av Stoyt / Tvørmegi haldi">
+          <span>kr</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="membershipSharedTvoormegiCost">Tvørmegi-partur<small>Verður roknað sum samlaður kostnaður minus Stoyt-partur</small></label>
+        <div class="input-with-suffix">
+          <input id="membershipSharedTvoormegiCost" type="number" min="0" step="1" value="${sharedTvoormegi}" readonly aria-label="Tvørmegi partur av Stoyt / Tvørmegi haldi">
+          <span>kr</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="membershipPartialCost">Partvís hald<small>Kostnaður fyri partvíst hald</small></label>
+      <div class="input-with-suffix">
+        <input id="membershipPartialCost" type="number" min="0" step="1" value="${safeNumber(partial?.cost)}" data-membership-setting="partialCost" aria-label="Partvís hald kostnaður">
+        <span>kr</span>
+      </div>
+    </div>
+  `;
+}
 function renderTerms() {
   termsInputs.innerHTML = termConfig
     .map((config) => {
@@ -466,8 +527,30 @@ function makeShareUrl() {
 }
 
 
+function setActiveSettingsTab(tabName) {
+  document.querySelectorAll("[data-settings-tab]").forEach((button) => {
+    const isActive = button.dataset.settingsTab === tabName;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-selected", isActive ? "true" : "false");
+  });
+
+  document.querySelectorAll("[data-settings-panel]").forEach((panel) => {
+    panel.hidden = panel.dataset.settingsPanel !== tabName;
+  });
+}
+
+function updateSharedTvoormegiPreview() {
+  const fullInput = document.querySelector("#membershipSharedFullCost");
+  const stoytInput = document.querySelector("#membershipSharedStoytCost");
+  const tvoormegiInput = document.querySelector("#membershipSharedTvoormegiCost");
+  if (!fullInput || !stoytInput || !tvoormegiInput) return;
+  tvoormegiInput.value = Math.max(0, safeNumber(fullInput.value) - safeNumber(stoytInput.value));
+}
+
 function openTermsModal() {
   renderTerms();
+  renderMembershipSettings();
+  setActiveSettingsTab("terms");
   const modal = document.querySelector("#termsModal");
   if (!modal) return;
   modal.hidden = false;
@@ -483,7 +566,7 @@ function closeTermsModal() {
   document.querySelector("#openTermsButton")?.focus();
 }
 
-function saveTermsFromModal() {
+function saveSettingsFromModal() {
   termConfig.forEach((config) => {
     const input = document.querySelector(`#${config.key}`);
     if (!input) return;
@@ -492,6 +575,19 @@ function saveTermsFromModal() {
       ? safeNumber(input.value) / 100
       : safeNumber(input.value);
   });
+
+  const adult = getMembershipById("adult");
+  const youth = getMembershipById("youth");
+  const shared = getMembershipById("shared");
+  const partial = getMembershipById("partial");
+
+  if (adult) adult.cost = safeNumber(document.querySelector("#membershipAdultCost")?.value);
+  if (youth) youth.cost = safeNumber(document.querySelector("#membershipYouthCost")?.value);
+  if (shared) shared.cost = safeNumber(document.querySelector("#membershipSharedStoytCost")?.value);
+  if (partial) partial.cost = safeNumber(document.querySelector("#membershipPartialCost")?.value);
+  terms.sharedFullPrice = safeNumber(document.querySelector("#membershipSharedFullCost")?.value);
+
+  renderMembershipRows();
   renderResults();
   closeTermsModal();
 }
@@ -510,6 +606,11 @@ function attachEvents() {
     }
 
     if (termKey) {
+      return;
+    }
+
+    if (event.target.dataset.membershipSetting) {
+      updateSharedTvoormegiPreview();
       return;
     }
 
@@ -563,8 +664,12 @@ function attachEvents() {
   document.querySelector("#openTermsButton")?.addEventListener("click", openTermsModal);
   document.querySelector("#closeTermsButton")?.addEventListener("click", closeTermsModal);
   document.querySelector("#cancelTermsButton")?.addEventListener("click", closeTermsModal);
-  document.querySelector("#saveTermsButton")?.addEventListener("click", saveTermsFromModal);
+  document.querySelector("#saveTermsButton")?.addEventListener("click", saveSettingsFromModal);
   document.querySelector("[data-close-terms]")?.addEventListener("click", closeTermsModal);
+
+  document.querySelectorAll("[data-settings-tab]").forEach((button) => {
+    button.addEventListener("click", () => setActiveSettingsTab(button.dataset.settingsTab));
+  });
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && !document.querySelector("#termsModal")?.hidden) {
